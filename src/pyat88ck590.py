@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #=======================================================================
 #
@@ -7,46 +7,35 @@
 # Code to talk to the Atmel/Microchip Crypto Authentication Eval
 # Kit USB dongle.
 #
-# PID, VID etc info for the dongle:
-# idVendor               : 0x03eb
-# idProduct              : 0x2312
-# bcdDevice              : 0x1000 Device 16.0
-# iManufacturer          : 0x1 ATMEL
-# iProduct               : 0x2 Crypto Device Demo
+# path:                "USB_03eb_2312_14100000"
+# vendor_id:           0x03eb
+# product_id:          0x2312
+# serial_number:       ""
+# release_number:      0x1000
+# manufacturer_string: "ATMEL"
+# product_string:      "Crypto Device Demo"
+# usage_page:          65535
+# usage:               1
+# interface_number:    -1
 #
 #=======================================================================
 
 import sys
-import usb.core
-import usb.util
-
-
+import hidapi
 
 
 #-------------------------------------------------------------------
 #-------------------------------------------------------------------
 def dump_all_devices():
-    all_devs = usb.core.find(find_all=True)
-    for d in all_devs:
-        print(d)
-
-#-------------------------------------------------------------------
-#-------------------------------------------------------------------
-def find_device(pid, vid):
-    dev = usb.core.find(idProduct = pid, idVendor = vid)
-
-    if dev is None:
-        raise ValueError('Device not found')
-    return dev
+    for dev in hidapi.hid_enumerate():
+        print dev.description()
 
 
 #-------------------------------------------------------------------
 #-------------------------------------------------------------------
 def main():
-#    dump_all_devices()
-    print("Specific device - ATMEL Crypto Dongle:\n")
-    my_dev = find_device(pid = 0x2312, vid = 0x03eb)
-    print(my_dev)
+    hidapi.hid_init()
+    dump_all_devices()
 
 
 #-------------------------------------------------------------------
